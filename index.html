@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ガチャガチャ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="gacha-box">
+    <p class="ttl">ガチャガチャ</p>
+    <p class="txt">ボタンをクリックしてガチャを回そう！</p>
+    <div class="ball-box">
+      <div class="red-box -top"><!--  --></div>
+      <div class="glass">
+        <div class="ball-controll">
+          <span class="ball -red"></span>
+          <span class="ball -red"></span>
+          <span class="ball -yellow"></span>
+          <span class="ball -yellow"></span>
+          <span class="ball -blue"></span>
+          <span class="ball -blue"></span>
+          <span class="ball -green"></span>
+        </div>
+      </div>
+      <div class="red-box -md"><!--  --></div>
+      <div class="red-box -bt">
+        <div class="coin-box"><!--  --></div>
+        <div class="circle-turn"><!--  --></div>
+        <div class="exit-box"><!--  --></div>
+      </div>
+    </div>
+    <div class="btn-box">
+      <button id="gachaButton">ガチャを回す</button>
+    </div>
+    <!-- <div class="gacha-modal-bg"></div> -->
+    <div class="gacha-modal">
+      <p class="gacha-close">X</p>
+      <div id="result">ここに結果が表示されます</div>
+    </div>
+  </div>
+  <script src="jquery.min.js"></script>
+  <script>
+    const prizes = [
+      { name: "50%の確率", weight: 5 },
+      { name: "10%の確率1", weight: 1 },
+      { name: "10%の確率2", weight: 1 },
+      { name: "10%の確率3", weight: 1 },
+      { name: "20%の確率", weight: 2 }
+    ];
+
+    const gachaButton = document.getElementById("gachaButton");
+    const result = document.getElementById("result");
+
+    gachaButton.addEventListener("click", () => {
+      if (!$('.gacha-box').hasClass('-on')) {
+        $('.gacha-box').addClass('-on');
+        setTimeout(function () {
+          const prize = drawPrize(prizes);
+          result.textContent = `${prize.name}`;
+          $('.gacha-modal').addClass('-on');
+        }, 1100)
+      }
+    });
+    $('.gacha-close').on('click', function () {
+      $('.gacha-box').removeClass('-on');
+      $('.gacha-modal').removeClass('-on');
+    });
+
+    function drawPrize(prizes) {
+      const totalWeight = prizes.reduce((sum, prize) => sum + prize.weight, 0);
+      const random = Math.random() * totalWeight;
+      let cumulativeWeight = 0;
+
+      for (const prize of prizes) {
+        cumulativeWeight += prize.weight;
+        if (random < cumulativeWeight) {
+          return prize;
+        }
+      }
+    }
+  </script>
+</body>
+
+</html>
